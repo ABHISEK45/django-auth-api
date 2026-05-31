@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.core.mail import send_mail
+from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -21,6 +22,11 @@ from .utils import generate_otp
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+            request_body=RegisterSerializer,
+            operation_description="Register a new user and send OTP to email"
+    )
 
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -70,6 +76,11 @@ class RegisterView(APIView):
 class VerifyRegistrationView(APIView):
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(
+        request_body=VerifyOTPSerializer,
+        operation_description="Verify registration OTP"
+    )
+
     def post(self, request):
         serializer = VerifyOTPSerializer(data=request.data)
 
@@ -115,6 +126,11 @@ class VerifyRegistrationView(APIView):
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        request_body=LoginSerializer,
+        operation_description="Login and set auth_token cookie"
+    )
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -164,6 +180,10 @@ class LoginView(APIView):
 
 class MeView(APIView):
 
+    @swagger_auto_schema(
+        operation_description="Get currently authenticated user"
+    )
+
     def get(self, request):
         serializer = UserSerializer(request.user)
 
@@ -171,6 +191,10 @@ class MeView(APIView):
 
 
 class LogoutView(APIView):
+
+    @swagger_auto_schema(
+        operation_description="Logout and clear auth_token cookie"
+    )
 
     def post(self, request):
 
