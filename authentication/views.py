@@ -41,7 +41,7 @@ class RegisterView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-            username = email.split("@")[0]
+            username = email
 
             user = User.objects.create_user(
                 username=username,
